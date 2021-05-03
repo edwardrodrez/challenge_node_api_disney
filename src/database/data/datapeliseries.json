@@ -1,0 +1,53 @@
+[
+    {
+        "titulo": "La banda del patio",
+        "fecha_creacion": "1973/12/31",
+        "calificacion": 3,
+        "tipo": "s",
+        "imagen": "1.111.111-1",
+        "genero": "Comedia",
+        "estado": 1
+    },
+    {
+        "titulo": "Aladdin",
+        "fecha_creacion": "1973/12/31",
+        "calificacion": 3,
+        "tipo": "p",
+        "imagen": "1.111.111-1",
+        "genero": "Comedia",
+        "estado": 1
+    },
+    {
+        "titulo": "101 Dalmatas",
+        "fecha_creacion": "1973/12/31",
+        "calificacion": 3,
+        "tipo": "p",
+        "imagen": "1.111.111-1",
+        "genero": "Comedia",
+        "estado": 1
+    },{
+        "titulo": "Alicia en el pais de las maravillas",
+        "fecha_creacion": "1973/12/31",
+        "calificacion": 3,
+        "tipo": "p",
+        "imagen": "1.111.111-1",
+        "genero": "Comedia",
+        "estado": 1
+    },{
+        "titulo": "Darwink Douck",
+        "fecha_creacion": "1973/12/31",
+        "calificacion": 3,
+        "tipo": "p",
+        "imagen": "1.111.111-1",
+        "genero": "Comedia",
+        "estado": 1
+    },{
+        "titulo": "Patoaventuras",
+        "fecha_creacion": "1973/12/31",
+        "calificacion": 3,
+        "tipo": "s",
+        "imagen": "1.111.111-1",
+        "genero": "Comedia",
+        "estado": 1
+    }
+]

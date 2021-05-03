@@ -1,0 +1,26 @@
+[
+    {
+        "nombre": "Pato Darkwing",
+        "edad": 23,
+        "peso": 3,
+        "historia": "histor",
+        "imagen": "1.111.111-1",
+        "estado": 1
+    },
+    {
+        "nombre": "Micky Mouse ",
+        "edad": 23,
+        "peso": 3,
+        "historia": "histor",
+        "imagen": "1.111.111-1",
+        "estado": 1
+    },
+    {
+        "nombre": "Ariel",
+        "edad": 23,
+        "peso": 3,
+        "historia": "histor",
+        "imagen": "1.111.111-1",
+        "estado": 1
+    }
+]

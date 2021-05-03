@@ -33,11 +33,13 @@ CREATE TABLE IF NOT EXISTS peliculaserie(
     createAt DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
-CREATE TABLE personajes_peli_serie (
-  id_peli_serie    int REFERENCES peli_serie (id_peli_serie) ON UPDATE CASCADE ON DELETE CASCADE
-, id_personajes int REFERENCES personajes (id_personajes) ON UPDATE CASCADE
-, amount     numeric NOT NULL DEFAULT 1
-, CONSTRAINT personajes_peli_serie_pkey PRIMARY KEY (id_peli_serie, id_personajes)  -- explicit pk
+CREATE TABLE IF NOT EXISTS "personajepeliculaserie" (
+  "personajeId" INTEGER NOT NULL REFERENCES "personajes" ("personajeid") ON DELETE RESTRICT ON UPDATE CASCADE,
+  "peliculaserieId" INTEGER NOT NULL REFERENCES "peliculaserie" ("peliculaserieid") ON DELETE RESTRICT ON UPDATE CASCADE,
+  "createdat" TIMESTAMP WITH TIME ZONE NOT NULL,
+  "updatedat" TIMESTAMP WITH TIME ZONE NOT NULL,
+  UNIQUE ("personajeId", "peliculaserieId"),     -- Note: Sequelize generated this UNIQUE constraint but
+  PRIMARY KEY ("personajeId","peliculaserieId")  -- it is irrelevant since it's also a PRIMARY KEY
 );
 /*precarga de datos */
 
@@ -62,25 +64,25 @@ INSERT INTO personajes(nombre, edad, peso, historia)
 VALUES('Cruella de Vil', 40, 53.33, 'Historia de Cruella de Vil...');
 
 /*PELICULAS*/
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('101 dálmatas', '1973/12/31', 3, 'Comedia', 'p');
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('Aladdin', '1969/07/29', 3,'Comedia', 'p');
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('Alicia en el país de las maravillas',  '1973/12/31', 3,'Comedia', 'p');
 
 /*SERIES*/
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('La banda del patio', '1973/12/31', 3,'Comedia', 's');
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('Darkwing Duck', '1960/09/30', 3,'Comedia','s');
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('Gargoyles: Héroes mitológicos', '1963/11/18', 3, 'Comedia','s');
-INSERT INTO peli_serie(titulo, fecha_creacion, calificacion, genero, tipo) 
+INSERT INTO peliculaserie(titulo, fecha_creacion, calificacion, genero, tipo) 
 VALUES('Patoaventuras', '1960/12/28', 3,'Comedia', 's');
 
 /*PELICULAS O SERIES Y SUS PERSONAJES */
-INSERT INTO personajes_peli_serie(id_peli_serie, id_personajes) 
-VALUES(3,5);
-INSERT INTO personajes_peli_serie(id_peli_serie, id_personajes) 
-VALUES(7,4);
+INSERT INTO personajepeliculaserie(personajeid, peliculaserieid) 
+VALUES(5,3);
+INSERT INTO personajepeliculaserie(personajeid, peliculaserieid) 
+VALUES(4,7);

@@ -6,6 +6,8 @@ const app = routerx()
 //post 
 app.post('/login', UsuarioController.login);
 app.post('/register', UsuarioController.register);
+
+//get
 app.get('/logout',auth, UsuarioController.logout);
 
 export default app ;

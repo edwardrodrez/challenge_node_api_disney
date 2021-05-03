@@ -1,12 +1,13 @@
-import Models from "../models/AllModels";
+const { Op } = require("sequelize");
+import models from "../database/models/models";
+import Models from "../database/models/models";
 
 
 //Crear Pelicula
 let add = async (req, res, next) => {
-    const { peliculaserieid, titulo, imagen, fecha_creacion, calificacion, genero } = req.body;
+    const { titulo, imagen, fecha_creacion, calificacion, genero } = req.body;
     try {
-        const data = await Models.PeliSerie.create({
-            peliculaserieid,
+        const data = await Models.PeliculaSerie.create({
             titulo,
             imagen,
             fecha_creacion,
@@ -37,12 +38,16 @@ let add = async (req, res, next) => {
 
 //Detalle de Pelicula
 let query = async (req, res, next) => {
-    let id = req.query.peliculaserieid;
+    let id = req.query.id;
     try {
-        const data = await Models.PeliSerie.findOne({
+        const data = await Models.PeliculaSerie.findOne({
             where: {
-                peliculaserieid: id,
+                id: id,
                 tipo: 'p'
+            },
+            include: {
+                model: Models.Personaje,
+                attributes: ["nombre", "edad", "peso", "historia", "imagen",],
             }
         });
         if (!data) {
@@ -66,7 +71,7 @@ let query = async (req, res, next) => {
 //Listar Peliculas
 let list = async (req, res, next) => {
     try {
-        const data = await Models.PeliSerie.findAll({
+        const data = await Models.PeliculaSerie.findAll({
             attributes: ["titulo", "imagen", 'fecha_creacion'],
             where: {
                 estado: true,
@@ -91,18 +96,60 @@ let list = async (req, res, next) => {
     }
 }
 
+//Buscar Peliculas
+let search = async (req, res, next) => {
+    const { titulo, filter, order } = req.body;
+    try {
+        const valores = filter.valor;
+        const tipo = filter.tipo;
+
+        let ord = {};
+        let fil = {};
+        //Sentencias con orden por fecha
+        if (order !== 'NONE') {
+            ord = {
+                order: [ ['fecha_creacion', order],]
+            }
+        }
+        //Sentencias con filtro por genero
+        if (filter.status) {
+            fil = {
+                where:{[Op.and]: [
+                    { titulo: { [Op.iLike]: '%' + titulo + '%' }},
+                    { [tipo]: { [Op.iLike]: '%' + valores + '%' }},
+                ]}
+            }
+        } else {
+            //sin filtro 
+            fil = { where:{ titulo: { [Op.iLike]: '%' + titulo + '%' } }};
+        }
+        //Obtener busqueda con consulta armada
+        res.json({
+            data: await models.PeliculaSerie.findAll({
+                order:ord.order,
+                where:fil.where
+            })
+        })
+    } catch (e) {
+        res.status(500).send({
+            message: "Error en el proceso: " + e
+        });
+        next(e)
+    }
+}
+
 //Actualizar Pelicula
 let update = async (req, res, next) => {
-    let id = req.body.peliculaserieid;
-    const { titulo,  imagen, fecha_creacion, calificacion, genero } = req.body;
+    let id = req.body.id;
+    const { titulo, imagen, fecha_creacion, calificacion, genero } = req.body;
     try {
-        const data = await Models.PeliSerie.
+        const data = await Models.PeliculaSerie.
             update(
                 {
                     titulo: titulo, imagen: imagen, fecha_creacion: fecha_creacion, calificacion: calificacion, genero: genero
                 }, {
                 where: {
-                    peliculaserieid: id,
+                    id: id,
                     tipo: 'p'
                 }
             });
@@ -126,11 +173,11 @@ let update = async (req, res, next) => {
 
 //Eliminar Pelicula
 let remove = async (req, res, next) => {
-    let id = req.body.peliculaserieid;
+    let id = req.body.id;
     try {
-        const data = await Models.PeliSerie.destroy({
+        const data = await Models.PeliculaSerie.destroy({
             where: {
-                peliculaserieid: id,
+                id: id,
                 tipo: 'p'
             }
         });
@@ -184,6 +231,7 @@ export default {
     add,
     query,
     list,
+    search,
     update,
     activate,
     desactivate,

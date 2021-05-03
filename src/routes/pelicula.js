@@ -10,6 +10,7 @@ app.post('/add', auth, PeliculaController.add)
 //get
 app.get('/query', auth, PeliculaController.query);
 app.get('/list', auth, PeliculaController.list);
+app.get('/search', PeliculaController.search);
 
 //remove
 app.delete('/remove', auth, PeliculaController.remove);

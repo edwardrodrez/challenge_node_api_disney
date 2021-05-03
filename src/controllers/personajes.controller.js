@@ -1,20 +1,100 @@
-import Models from '../models/AllModels';
+import personaje_peliculaserie from '../database/models/asociaciones';
+import models from '../database/models/models';
+import Models from '../database/models/models';
+import PeliculaSerie from '../database/models/PeliculaSerie';
+
+const { Op } = require("sequelize");
 
 
 //Crear Personaje
 let add = async (req, res, next) => {
-    const { personajeid, nombre, edad, imagen, peso, historia } = req.body;
+    const { nombre, edad, imagen, peso, historia } = req.body;
     try {
+
         const data = await Models.Personaje.create({
-            personajeid,
             nombre,
             edad,
             imagen,
             peso,
-            historia,
+            historia
+        }, {
+            field: ['nombre', 'edad', 'imagen', 'peso', 'historia']
+        })
+        if (data) {
+            res.status(200).json({
+                message: "Personaje creado correctamente",
+                data: data
+            });
+        } else {
+            res.status(404).send({
+                message: "El personaje no ah podido ser creado",
+            });
+        }
+
+    } catch (e) {
+        res.status(500).send({
+            message: "Error en el proceso" + e
+        });
+        next(e)
+    }
+}
+
+//Agregar Pelicula al personaje
+let addPelicula = async (req, res, next) => {
+    const { idPersonaje, idPelicula } = req.body;
+    try {
+        const pelicula = await Models.Personaje.findOne({
+            where: {
+                id: idPelicula,
+            }
+        });
+        if (pelicula) {
+            const personaje = await Models.Personaje.findOne({
+                where: {
+                    id: idPersonaje
+                }
+            }).associations({
+                pelicula
+            });
+            if (personaje) {
+                res.status(200).json({
+                    message: "Pelicula agregada correctamente",
+                    data: peliculaagregada
+                });
+            } else {
+                res.status(404).send({
+                    message: "El personaje no existe"
+                });
+            }
+        } else {
+            res.status(404).send({
+                message: "Lapelicula a agregar no existe"
+            });
+        }
+    } catch (e) {
+        res.status(500).send({
+            message: "Error en el proceso" + e
+        });
+        next(e)
+    }
+}
+
+//Agregar Serie al Personaje
+let addSerie = async (req, res, next) => {
+    const { nombre, edad, imagen, peso, historia } = req.body;
+    try {
+        const data = await Models.Personaje.create({
+            nombre,
+            edad,
+            imagen,
+            peso,
+            historia
         }, {
             field: ['nombre', 'edad', 'imagen', 'peso', 'historia']
         });
+        models.Personaje.associations({
+            peliserie
+        })
         if (data) {
             res.status(200).json({
                 message: "Personaje creado correctamente",
@@ -36,11 +116,15 @@ let add = async (req, res, next) => {
 
 //Detalle de Personaje
 let query = async (req, res, next) => {
-    let id = req.query.personajeid;
+    let id = req.query.id;
     try {
         const data = await Models.Personaje.findOne({
             where: {
-                personajeid: id
+                id: id
+            },
+            include: {
+                model: PeliculaSerie,
+                attributes: ["titulo", "fecha_creacion", "calificacion", "genero", "tipo", "imagen",],
             }
         });
         if (!data) {
@@ -65,10 +149,10 @@ let query = async (req, res, next) => {
 let list = async (req, res, next) => {
     try {
         const data = await Models.Personaje.findAll({
-            attributes: ["nombre", "imagen"],
+            attributes: ["nombre", "imagen",],
             where: {
                 estado: true
-            }
+            },
         });
         if (data.length == 0) {
             res.status(404).send({
@@ -88,6 +172,60 @@ let list = async (req, res, next) => {
     }
 }
 
+//Buscar Personajes
+let search = async (req, res, next) => {
+    const { nombre, filter } = req.body;
+    try {
+        const valores = filter.valor;
+        const tipo = filter.tipo;
+
+        let fil = {};
+        //Con filtro
+        if (filter.status) {
+            //Filtrado es por Pelicula/serie
+            if(tipo === 'peliserie'){
+                fil = {
+                    where: {
+                        nombre: { [Op.iLike]: '%' + nombre + '%' },
+                    }, include: {
+                        model: PeliculaSerie,
+                        where: {
+                            titulo: { [Op.iLike]: '%' + valores + '%' }
+                        }
+                    }
+                }
+                console.log(fil)
+            }else{
+                //FIltrado es por nombre o edad = tipo 
+                fil = {
+                    where: {
+                        [Op.and]: [
+                            { nombre: { [Op.iLike]: '%' + nombre + '%' } },
+                            { [tipo]: [valores] }
+                        ]
+                    }
+                }
+            }
+        } else {
+            //Sin filtro 
+            fil = { where: { nombre: { [Op.iLike]: '%' + nombre + '%' } } };
+        }
+        res.json({
+            data: await models.Personaje.findAll({     
+                where: fil.where,
+                include:fil.include
+            })
+        })
+
+    } catch (e) {
+        res.status(500).send({
+            message: "Error en el proceso: " + e
+        });
+        next(e)
+    }
+}
+
+
 //Actualizar Personaje
 let update = async (req, res, next) => {
     let id = req.body.personajeid;
@@ -99,7 +237,7 @@ let update = async (req, res, next) => {
                     nombre: nombre, edad: edad, imagen: imagen, peso: peso, historia: historia
                 }, {
                 where: {
-                    personajeid: id
+                    id: id
                 }
             });
         if (data == 0) {
@@ -126,7 +264,7 @@ let remove = async (req, res, next) => {
     try {
         const data = await Models.Personaje.destroy({
             where: {
-                personajeid: id
+                id: id
             }
         });
         if (data == 1) {
@@ -176,8 +314,11 @@ let desactivate = (req, res, next) => {
 
 export default {
     add,
+    addPelicula,
+    addSerie,
     query,
     list,
+    search,
     update,
     activate,
     desactivate,

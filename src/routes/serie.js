@@ -10,6 +10,8 @@ app.post('/add', auth, SerieController.add)
 //get
 app.get('/query', auth, SerieController.query);
 app.get('/list', auth, SerieController.list);
+app.get('/search', SerieController.search);
+
 
 //remove
 app.delete('/remove', auth, SerieController.remove);
