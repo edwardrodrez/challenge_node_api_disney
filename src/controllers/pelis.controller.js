@@ -1,7 +1,8 @@
-const { Op } = require("sequelize");
+
 import models from "../database/models/models";
 import Models from "../database/models/models";
 
+const { Op } = require("sequelize");
 
 //Crear Pelicula
 let add = async (req, res, next) => {

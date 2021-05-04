@@ -5,20 +5,20 @@ import { auth } from '../services/auth';
 const app = routerx()
 
 //post 
-app.post('/add', auth, SerieController.add)
+app.post('/add', SerieController.add)
 
 //get
-app.get('/query', auth, SerieController.query);
-app.get('/list', auth, SerieController.list);
+app.get('/query', SerieController.query);
+app.get('/list', SerieController.list);
 app.get('/search', SerieController.search);
 
 
 //remove
-app.delete('/remove', auth, SerieController.remove);
+app.delete('/remove', SerieController.remove);
 
 //put
-app.put('/update', auth, SerieController.update);
-app.put('/activate', auth, SerieController.activate);
-app.put('/desactivate', auth, SerieController.desactivate);
+app.put('/update', SerieController.update);
+app.put('/activate', SerieController.activate);
+app.put('/desactivate', SerieController.desactivate);
 
 export default app ;

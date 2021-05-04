@@ -1,4 +1,4 @@
-import personaje_peliculaserie from '../database/models/asociaciones';
+
 import models from '../database/models/models';
 import Models from '../database/models/models';
 import PeliculaSerie from '../database/models/PeliculaSerie';

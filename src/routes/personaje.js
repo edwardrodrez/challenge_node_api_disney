@@ -6,23 +6,23 @@ const app = routerx()
 
 //post 
 
-app.post('/add', auth, PersonajeController.add)
+app.post('/add', PersonajeController.add)
 
-app.post('/addPelicula', auth, PersonajeController.addPelicula)
-app.post('/addSerie', auth, PersonajeController.addSerie)
+app.post('/addPelicula', PersonajeController.addPelicula)
+app.post('/addSerie', PersonajeController.addSerie)
 
 //get
-app.get('/query', auth, PersonajeController.query);
-app.get('/list', auth, PersonajeController.list);
+app.get('/query', PersonajeController.query);
+app.get('/list', PersonajeController.list);
 app.get('/search', PersonajeController.search);
 
 //remove
-app.delete('/remove', auth, PersonajeController.remove);
+app.delete('/remove', PersonajeController.remove);
 
 //put
-app.put('/update', auth, PersonajeController.update);
-app.put('/activate', auth, PersonajeController.activate);
-app.put('/desactivate', auth, PersonajeController.desactivate);
+app.put('/update', PersonajeController.update);
+app.put('/activate', PersonajeController.activate);
+app.put('/desactivate', PersonajeController.desactivate);
 
 
 

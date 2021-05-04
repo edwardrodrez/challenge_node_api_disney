@@ -5,19 +5,19 @@ import { auth } from '../services/auth';
 const app = routerx()
 
 //post 
-app.post('/add', auth, PeliculaController.add)
+app.post('/add', PeliculaController.add)
 
 //get
-app.get('/query', auth, PeliculaController.query);
-app.get('/list', auth, PeliculaController.list);
+app.get('/query', PeliculaController.query);
+app.get('/list', PeliculaController.list);
 app.get('/search', PeliculaController.search);
 
 //remove
-app.delete('/remove', auth, PeliculaController.remove);
+app.delete('/remove', PeliculaController.remove);
 
 //put
-app.put('/update', auth, PeliculaController.update);
-app.put('/activate', auth, PeliculaController.activate);
-app.put('/desactivate', auth, PeliculaController.desactivate);
+app.put('/update', PeliculaController.update);
+app.put('/activate', PeliculaController.activate);
+app.put('/desactivate', PeliculaController.desactivate);
 
 export default app ;

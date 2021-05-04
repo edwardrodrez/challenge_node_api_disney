@@ -3,7 +3,9 @@ import bcrypt from '../helpers/bcrypt';
 import secretKey from '../helpers/randomkey'
 import jwt from 'jsonwebtoken';
 import authConfig from '../settings/auth';
-import Op from 'Sequelize';
+
+
+const { Op } = require("sequelize");
 
 
 //Login de usuarios
